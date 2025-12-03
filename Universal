@@ -766,4 +766,135 @@ mini.MouseButton1Click:Connect(function()
     }):Play()
 end)
 
+-- Add this to the TELEPORT TAB (scrollFrames[4]) - Fling Add-On
+-- Select player from dropdown, toggle on to start flinging
+
+local flingFrame = Instance.new("Frame")
+flingFrame.Size = UDim2.new(1, 0, 0, 140)
+flingFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
+flingFrame.Parent = scrollFrames[4]
+Instance.new("UICorner", flingFrame).CornerRadius = UDim.new(0, 25)
+
+local flingLabel = Instance.new("TextLabel")
+flingLabel.Text = "Fling Player"
+flingLabel.TextColor3 = Color3.fromRGB(220, 255, 255)
+flingLabel.Font = Enum.Font.GothamBold
+flingLabel.TextSize = 22
+flingLabel.BackgroundTransparency = 1
+flingLabel.Size = UDim2.new(0.4, 0, 0.35, 0)
+flingLabel.Position = UDim2.new(0, 30, 0, 0)
+flingLabel.Parent = flingFrame
+
+local flingDropdownBtn = Instance.new("TextButton")
+flingDropdownBtn.Size = UDim2.new(0, 130, 0, 60)
+flingDropdownBtn.Position = UDim2.new(1, -150, 0.25, -30)
+flingDropdownBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
+flingDropdownBtn.Text = "Select Player"
+flingDropdownBtn.TextScaled = true
+flingDropdownBtn.Font = Enum.Font.Gotham
+flingDropdownBtn.Parent = flingFrame
+Instance.new("UICorner", flingDropdownBtn).CornerRadius = UDim.new(0, 25)
+
+local flingDropdownList = Instance.new("ScrollingFrame")
+flingDropdownList.Size = UDim2.new(1, -40, 0, 220)
+flingDropdownList.Position = UDim2.new(0, 20, 0.45, 0)
+flingDropdownList.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
+flingDropdownList.BackgroundTransparency = 0.2
+flingDropdownList.ScrollBarThickness = 5
+flingDropdownList.Visible = false
+flingDropdownList.Parent = flingFrame
+Instance.new("UICorner", flingDropdownList).CornerRadius = UDim.new(0, 18)
+
+local flingListLayout = Instance.new("UIListLayout")
+flingListLayout.Padding = UDim.new(0, 10)
+flingListLayout.Parent = flingDropdownList
+
+local flingToggle = Instance.new("TextButton")
+flingToggle.Size = UDim2.new(0, 100, 0, 60)
+flingToggle.Position = UDim2.new(1, -150, 0.75, -30)
+flingToggle.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
+flingToggle.Text = "OFF"
+flingToggle.TextScaled = true
+flingToggle.Font = Enum.Font.GothamBold
+flingToggle.Parent = flingFrame
+Instance.new("UICorner", flingToggle).CornerRadius = UDim.new(0, 25)
+
+local selectedTarget = nil
+local flingRefreshConn
+flingDropdownBtn.MouseButton1Click:Connect(function()
+    flingDropdownList.Visible = not flingDropdownList.Visible
+    if flingDropdownList.Visible then
+        for _, child in pairs(flingDropdownList:GetChildren()) do
+            if child:IsA("TextButton") then child:Destroy() end
+        end
+        flingRefreshConn = RunService.Heartbeat:Connect(function()
+            if not flingDropdownList.Visible then flingRefreshConn:Disconnect() return end
+            flingDropdownList.CanvasSize = UDim2.new(0, 0, 0, #Players:GetPlayers() * 45)
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= player then
+                    local pBtn = Instance.new("TextButton")
+                    pBtn.Size = UDim2.new(1, 0, 0, 45)
+                    pBtn.BackgroundTransparency = 1
+                    pBtn.Text = p.DisplayName .. " (" .. p.Name .. ")"
+                    pBtn.TextScaled = true
+                    pBtn.Font = Enum.Font.Gotham
+                    pBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    pBtn.Parent = flingDropdownList
+                    pBtn.MouseButton1Click:Connect(function()
+                        selectedTarget = p
+                        flingDropdownBtn.Text = p.Name
+                        flingDropdownList.Visible = false
+                    end
+                end
+            end
+        end)
+    else
+        if flingRefreshConn then flingRefreshConn:Disconnect() end
+    end
+end)
+
+local flingActive = false
+local tpLoop, velocityLoop
+flingToggle.MouseButton1Click:Connect(function()
+    flingActive = not flingActive
+    flingToggle.Text = flingActive and "ON" or "OFF"
+    flingToggle.BackgroundColor3 = flingActive and Color3.fromRGB(0, 255, 120) or Color3.fromRGB(255, 70, 70)
+    
+    if flingActive then
+        if not selectedTarget or not selectedTarget.Character or not selectedTarget.Character:FindFirstChild("HumanoidRootPart") then
+            flingActive = false
+            flingToggle.Text = "OFF"
+            flingToggle.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
+            return
+        end
+        
+        local myHrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if not myHrp then return end
+        
+        local bv = Instance.new("BodyVelocity", myHrp)
+        bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        bv.Velocity = Vector3.new(0, 0, 0)
+        
+        local sign = 1
+        velocityLoop = spawn(function()
+            while flingActive do
+                bv.Velocity = Vector3.new(0, sign * 928839293393, 0)
+                sign = -sign
+                task.wait(0.05)
+            end
+            bv:Destroy()
+        end)
+        
+        tpLoop = spawn(function()
+            while flingActive do
+                if selectedTarget.Character and selectedTarget.Character:FindFirstChild("HumanoidRootPart") then
+                    myHrp.CFrame = selectedTarget.Character.HumanoidRootPart.CFrame
+                end
+                task.wait(0.01)
+            end
+        end)
+    else
+        flingActive = false
+    end
+end)
 print("ULTIMATE UNIVERSAL HUB v3.3 LOADED - Press INSERT to open!")
