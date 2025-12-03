@@ -1,0 +1,206 @@
+-- ULTIMATE SECOND MENU v1.0 - Press INSERT to open
+-- 100% animated, beautiful, packed with useful scripts
+
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+
+-- CREATE MAIN GUI
+local screen = Instance.new("ScreenGui")
+screen.Name = "UltimateSecondMenu"
+screen.ResetOnSpawn = false
+screen.Parent = game.CoreGui
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 420, 0, 540)
+mainFrame.Position = UDim2.new(0.5, -210, 0.5, -270)
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 28)
+mainFrame.BorderSizePixel = 0
+mainFrame.Visible = false
+mainFrame.ClipsDescendants = true
+mainFrame.Parent = screen
+
+-- Glow + Particles
+local glow = Instance.new("ImageLabel")
+glow.Size = UDim2.new(1.4, 0, 1.4, 0)
+glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+glow.AnchorPoint = Vector2.new(0.5, 0.5)
+glow.BackgroundTransparency = 1
+glow.Image = "rbxassetid://4316371720"
+glow.ImageTransparency = 0.5
+glow.ImageColor3 = Color3.fromRGB(0, 255, 255)
+glow.Parent = mainFrame
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 28)
+corner.Parent = mainFrame
+
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 3
+stroke.Color = Color3.fromRGB(0, 255, 255)
+stroke.Transparency = 0.3
+stroke.Parent = mainFrame
+
+-- Title Bar
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 60)
+titleBar.BackgroundColor3 = Color3.fromRGB(18, 18, 40)
+titleBar.Parent = mainFrame
+local titleCorner = Instance.new("UICorner", titleBar)
+titleCorner.CornerRadius = UDim.new(0, 28)
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Text = "ULTIMATE HUB"
+titleLabel.Font = Enum.Font.GothamBlack
+titleLabel.TextSize = 28
+titleLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Size = UDim2.new(0.6, 0, 1, 0)
+titleLabel.Position = UDim2.new(0, 20, 0, 0)
+titleLabel.Parent = titleBar
+
+-- Close & Minimize
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 40, 0, 40)
+closeBtn.Position = UDim2.new(1, -50, 0, 10)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.TextScaled = true
+closeBtn.Parent = titleBar
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 14)
+
+local miniBtn = Instance.new("TextButton")
+miniBtn.Size = UDim2.new(0, 40, 0, 40)
+miniBtn.Position = UDim2.new(1, -100, 0, 10)
+miniBtn.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+miniBtn.Text = "-"
+miniBtn.TextScaled = true
+miniBtn.Parent = titleBar
+Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(0, 14)
+
+-- Scrolling Content
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1, -20, 1, -80)
+scroll.Position = UDim2.new(0, 10, 0, 70)
+scroll.BackgroundTransparency = 1
+scroll.ScrollBarThickness = 6
+scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
+scroll.CanvasSize = UDim2.new(0, 0, 0, 1200)
+scroll.Parent = mainFrame
+
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 12)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = scroll
+
+-- Toggle Template Function
+local function createToggle(name, callback)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -10, 0, 50)
+    frame.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
+    frame.Parent = scroll
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
+
+    local label = Instance.new("TextLabel")
+    label.Text = name
+    label.TextColor3 = Color3.fromRGB(200, 255, 255)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 18
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.new(0.7, 0, 1, 0)
+    label.Position = UDim2.new(0, 15, 0, 0)
+    label.Parent = frame
+
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 80, 0, 34)
+    btn.Position = UDim2.new(1, -95, 0.5, -17)
+    btn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    btn.Text = "OFF"
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.GothamBold
+    btn.Parent = frame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
+
+    local active = false
+    btn.MouseButton1Click:Connect(function()
+        active = not active
+        btn.Text = active and "ON" or "OFF"
+        btn.BackgroundColor3 = active and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 50, 50)
+        if callback then callback(active) end
+    end)
+    return frame
+end
+
+-- ADD ALL FEATURES
+createToggle("God Mode (Anti Kill)", function(on) 
+    if on then player.Character.Humanoid.Health = 100 player.Character.Humanoid.MaxHealth = math.huge end
+end)
+
+createToggle("Infinite Stamina", function(on)
+    if on then
+        spawn(function()
+            while task.wait(0.1) and getgenv().infStamina do
+                player.Character.Humanoid.WalkSpeed = 16
+            end
+        end)
+        getgenv().infStamina = true
+    else
+        getgenv().infStamina = false
+    end
+end)
+
+createToggle("Fly (E to toggle)", function(on)
+    getgenv().flyActive = on
+    if on then loadstring(game:HttpGet("https://raw.githubusercontent.com/0-07Scripts/roblox/main/fly.lua"))() end
+end)
+
+createToggle("Noclip (Hold CTRL)", function(on) getgenv().noclip = on end)
+createToggle("ESP (Players)", function(on) loadstring(game:HttpGet("https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua"))() end)
+createToggle("Auto Farm Cash", function(on) getgenv().autoFarm = on end)
+createToggle("Speed (35)", function(on) player.Character.Humanoid.WalkSpeed = on and 35 or 16 end)
+createToggle("JumpPower (150)", function(on) player.Character.Humanoid.JumpPower = on and 150 or 50 end)
+createToggle("Click TP (Hold Q)", function(on) getgenv().clickTP = on end)
+createToggle("Infinite Yield Admin", function() if on then loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end end)
+
+-- Dragging
+local dragging = false
+local dragStart, startPos
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- Open/Close with Insert
+local open = false
+UserInputService.InputBegan:Connect(function(key)
+    if key.KeyCode == Enum.KeyCode.Insert then
+        open = not open
+        mainFrame.Visible = true
+        TweenService:Create(mainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
+            Size = open and UDim2.new(0, 420, 0, 540) or UDim2.new(0, 0, 0, 0),
+            Position = open and UDim2.new(0.5, -210, 0.5, -270) or UDim2.new(0.5, -210, 0.5, -270)
+        }):Play()
+        TweenService:Create(glow, TweenInfo.new(0.8), {ImageTransparency = open and 0.5 or 1}):Play()
+    end
+end)
+
+closeBtn.MouseButton1Click:Connect(function() mainFrame.Visible = false open = false end)
+
+print("ULTIMATE SECOND MENU LOADED - Press INSERT to open!")
