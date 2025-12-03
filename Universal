@@ -1,6 +1,6 @@
--- ULTIMATE UNIVERSAL HUB v3.1 - Press INSERT to toggle (PC Only)
--- Tons of advanced universal features + Strafe (draggable/speed/types) + Player TP Dropdown (auto-refresh)
--- Fully animated UI + Floating orbs + Epic animations
+-- ULTIMATE UNIVERSAL HUB v3.2 - Press INSERT to toggle (PC Only)
+-- Wider UI + Fixed spacing/separation + Advanced redesign & animations
+-- Sleek modern look with gradients, shadows, hover effects + Epic open/close anim (scale + rotate + glow pulse)
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -22,7 +22,7 @@ loadBg.BackgroundTransparency = 0.1
 loadBg.Parent = loadScreen
 
 local loadText = Instance.new("TextLabel")
-loadText.Text = "Loading Ultimate Hub v3.1..."
+loadText.Text = "Loading Ultimate Hub v3.2..."
 loadText.Font = Enum.Font.GothamBlack
 loadText.TextSize = 48
 loadText.TextColor3 = Color3.fromRGB(0, 255, 255)
@@ -48,99 +48,112 @@ task.wait(2.2)
 particle.Enabled = false
 loadScreen:Destroy()
 
--- MAIN GUI
+-- MAIN GUI (Wider: 520x640)
 local screen = Instance.new("ScreenGui")
-screen.Name = "UltimateUniversalHubV31"
+screen.Name = "UltimateUniversalHubV32"
 screen.ResetOnSpawn = false
 screen.Parent = game.CoreGui
 
 local main = Instance.new("Frame")
-main.Size = UDim2.new(0, 480, 0, 620)
-main.Position = UDim2.new(0.5, -240, 0.5, -310)
-main.BackgroundColor3 = Color3.fromRGB(12, 12, 32)
+main.Size = UDim2.new(0, 520, 0, 640)
+main.Position = UDim2.new(0.5, -260, 0.5, -320)
+main.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
 main.BorderSizePixel = 0
 main.Visible = false
 main.ClipsDescendants = true
 main.Parent = screen
 
--- Glow + Floating Orbs
+-- Advanced Glow + Shadow
 local glow = Instance.new("ImageLabel")
-glow.Size = UDim2.new(1.4, 0, 1.4, 0)
+glow.Size = UDim2.new(1.5, 0, 1.5, 0)
 glow.Position = UDim2.new(0.5, 0, 0.5, 0)
 glow.AnchorPoint = Vector2.new(0.5, 0.5)
 glow.BackgroundTransparency = 1
 glow.Image = "rbxassetid://4316371720"
-glow.ImageTransparency = 0.4
-glow.ImageColor3 = Color3.fromRGB(0, 255, 200)
+glow.ImageTransparency = 0.35
+glow.ImageColor3 = Color3.fromRGB(0, 255, 220)
 glow.Parent = main
 
-local orbs = Instance.new("ParticleEmitter")
-orbs.Texture = "rbxassetid://241650934"
-orbs.Lifetime = NumberRange.new(8, 15)
-orbs.Rate = 12
-orbs.Speed = NumberRange.new(1, 4)
-orbs.Size = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 0)}
-orbs.Color = ColorSequence.new(Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 0, 255))
-orbs.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 0.8)}
-orbs.SpreadAngle = Vector2.new(360, 360)
-orbs.Acceleration = Vector3.new(0, -5, 0)
-orbs.Enabled = false
-orbs.Parent = main
+local shadow = Instance.new("UIStroke")
+shadow.Thickness = 5
+shadow.Color = Color3.fromRGB(0, 0, 0)
+shadow.Transparency = 0.5
+shadow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+shadow.Parent = main
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new(Color3.fromRGB(15, 15, 35), Color3.fromRGB(5, 5, 20))
+gradient.Rotation = 90
+gradient.Parent = main
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 36)
+corner.CornerRadius = UDim.new(0, 40)
 corner.Parent = main
 
 local stroke = Instance.new("UIStroke")
 stroke.Thickness = 4
 stroke.Color = Color3.fromRGB(0, 255, 255)
-stroke.Transparency = 0.2
+stroke.Transparency = 0.15
 stroke.Parent = main
+
+-- Floating Orbs (more advanced: slower, colorful fade)
+local orbs = Instance.new("ParticleEmitter")
+orbs.Texture = "rbxassetid://241650934"
+orbs.Lifetime = NumberRange.new(10, 20)
+orbs.Rate = 10
+orbs.Speed = NumberRange.new(0.5, 2)
+orbs.Size = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.5), NumberSequenceKeypoint.new(1, 0.1)}
+orbs.Color = ColorSequence.new(Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 0, 255), Color3.fromRGB(255, 255, 0))
+orbs.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.1), NumberSequenceKeypoint.new(0.5, 0.4), NumberSequenceKeypoint.new(1, 1)}
+orbs.SpreadAngle = Vector2.new(360, 360)
+orbs.Acceleration = Vector3.new(0, -2, 0)
+orbs.Enabled = false
+orbs.Parent = main
 
 -- Header (draggable)
 local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 70)
+header.Size = UDim2.new(1, 0, 0, 80)
 header.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
 header.Parent = main
-Instance.new("UICorner", header).CornerRadius = UDim.new(0, 36)
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 40)
 
 local title = Instance.new("TextLabel")
-title.Text = "ULTIMATE UNIVERSAL HUB v3.1"
+title.Text = "ULTIMATE UNIVERSAL HUB v3.2"
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 28
+title.TextSize = 32
 title.TextColor3 = Color3.fromRGB(0, 255, 255)
 title.BackgroundTransparency = 1
 title.Size = UDim2.new(0.65, 0, 1, 0)
-title.Position = UDim2.new(0, 30, 0, 0)
+title.Position = UDim2.new(0, 35, 0, 0)
 title.Parent = header
 
 local close = Instance.new("TextButton")
-close.Size = UDim2.new(0, 55, 0, 55)
-close.Position = UDim2.new(1, -65, 0.5, -27.5)
+close.Size = UDim2.new(0, 60, 0, 60)
+close.Position = UDim2.new(1, -75, 0.5, -30)
 close.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 close.Text = "✕"
 close.TextScaled = true
 close.Font = Enum.Font.GothamBold
 close.Parent = header
-Instance.new("UICorner", close).CornerRadius = UDim.new(0, 20)
+Instance.new("UICorner", close).CornerRadius = UDim.new(0, 25)
 
 local mini = Instance.new("TextButton")
-mini.Size = UDim2.new(0, 55, 0, 55)
-mini.Position = UDim2.new(1, -130, 0.5, -27.5)
+mini.Size = UDim2.new(0, 60, 0, 60)
+mini.Position = UDim2.new(1, -145, 0.5, -30)
 mini.BackgroundColor3 = Color3.fromRGB(255, 190, 0)
 mini.Text = "−"
 mini.TextScaled = true
 mini.Font = Enum.Font.GothamBold
 mini.Parent = header
-Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 20)
+Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 25)
 
 -- Tabs (Movement, Combat, Visuals, Teleport)
 local tabFrame = Instance.new("Frame")
-tabFrame.Size = UDim2.new(1, 0, 0, 50)
-tabFrame.Position = UDim2.new(0, 0, 0, 70)
+tabFrame.Size = UDim2.new(1, 0, 0, 55)
+tabFrame.Position = UDim2.new(0, 0, 0, 80)
 tabFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 65)
 tabFrame.Parent = main
-Instance.new("UICorner", tabFrame).CornerRadius = UDim.new(0, 16)
+Instance.new("UICorner", tabFrame).CornerRadius = UDim.new(0, 18)
 
 local tabs = {"Movement", "Combat", "Visuals", "Teleport"}
 local tabButtons = {}
@@ -154,7 +167,7 @@ for i, tabName in ipairs(tabs) do
     tabBtn.TextScaled = true
     tabBtn.Font = Enum.Font.GothamBold
     tabBtn.Parent = tabFrame
-    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 16)
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 18)
     tabButtons[i] = tabBtn
     tabBtn.MouseButton1Click:Connect(function()
         for j, btn in pairs(tabButtons) do btn.BackgroundColor3 = Color3.fromRGB(40, 40, 80) end
@@ -164,12 +177,12 @@ for i, tabName in ipairs(tabs) do
     end)
 end
 
--- Scrolling Content per Tab
+-- Scrolling Content per Tab (increased spacing)
 local scrollFrames = {}
 for i = 1, #tabs do
     local scroll = Instance.new("ScrollingFrame")
-    scroll.Size = UDim2.new(1, -40, 1, -130)
-    scroll.Position = UDim2.new(0, 20, 0, 80)
+    scroll.Size = UDim2.new(1, -50, 1, -145)
+    scroll.Position = UDim2.new(0, 25, 0, 95)
     scroll.BackgroundTransparency = 1
     scroll.ScrollBarThickness = 6
     scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
@@ -179,7 +192,7 @@ for i = 1, #tabs do
     scrollFrames[i] = scroll
 
     local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 18)
+    listLayout.Padding = UDim.new(0, 25)  -- Increased spacing
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
     listLayout.Parent = scroll
 end
@@ -190,13 +203,13 @@ local function updateScrollContent()
     end
 end
 
--- ADVANCED TOGGLE/SLIDER/DROPDOWN TEMPLATE
+-- ADVANCED TOGGLE/SLIDER/DROPDOWN TEMPLATE (hover effects + increased height)
 local function createToggle(frame, name, callback, hasSlider)
     local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(1, 0, 0, 70)
+    toggleFrame.Size = UDim2.new(1, 0, 0, 80)  -- Increased height
     toggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
     toggleFrame.Parent = frame
-    Instance.new("UICorner", toggleFrame).CornerRadius = UDim.new(0, 20)
+    Instance.new("UICorner", toggleFrame).CornerRadius = UDim.new(0, 25)
 
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Text = name
@@ -205,20 +218,28 @@ local function createToggle(frame, name, callback, hasSlider)
     nameLabel.TextSize = 22
     nameLabel.BackgroundTransparency = 1
     nameLabel.Size = UDim2.new(0.55, 0, 1, 0)
-    nameLabel.Position = UDim2.new(0, 25, 0, 0)
+    nameLabel.Position = UDim2.new(0, 30, 0, 0)
     nameLabel.TextXAlignment = Enum.TextXAlignment.Left
     nameLabel.Parent = toggleFrame
 
     local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(0, 90, 0, 55)
-    toggleBtn.Position = UDim2.new(1, -110, 0.5, -27.5)
+    toggleBtn.Size = UDim2.new(0, 100, 0, 60)
+    toggleBtn.Position = UDim2.new(1, -120, 0.5, -30)
     toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
     toggleBtn.Text = "OFF"
     toggleBtn.TextColor3 = Color3.new(1,1,1)
     toggleBtn.TextScaled = true
     toggleBtn.Font = Enum.Font.GothamBold
     toggleBtn.Parent = toggleFrame
-    Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 22)
+    Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 25)
+
+    -- Hover effect
+    toggleBtn.MouseEnter:Connect(function()
+        TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}):Play()
+    end)
+    toggleBtn.MouseLeave:Connect(function()
+        TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 70, 70)}):Play()
+    end)
 
     local active = false
     toggleBtn.MouseButton1Click:Connect(function()
@@ -231,20 +252,20 @@ local function createToggle(frame, name, callback, hasSlider)
     local sliderValue = 50
     if hasSlider then
         local sliderFrame = Instance.new("Frame")
-        sliderFrame.Size = UDim2.new(0, 120, 0, 50)
-        sliderFrame.Position = UDim2.new(0.6, 0, 0.5, -25)
+        sliderFrame.Size = UDim2.new(0, 130, 0, 60)
+        sliderFrame.Position = UDim2.new(0.6, 0, 0.5, -30)
         sliderFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 95)
         sliderFrame.Parent = toggleFrame
-        Instance.new("UICorner", sliderFrame).CornerRadius = UDim.new(0, 20)
+        Instance.new("UICorner", sliderFrame).CornerRadius = UDim.new(0, 25)
 
         local sliderBar = Instance.new("Frame")
         sliderBar.Size = UDim2.new(0.5, 0, 1, 0)
         sliderBar.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
         sliderBar.Parent = sliderFrame
-        Instance.new("UICorner", sliderBar).CornerRadius = UDim.new(0, 20)
+        Instance.new("UICorner", sliderBar).CornerRadius = UDim.new(0, 25)
 
         local sliderBtn = Instance.new("TextButton")
-        sliderBtn.Size = UDim2.new(0, 60, 0, 50)
+        sliderBtn.Size = UDim2.new(0, 65, 0, 60)
         sliderBtn.Position = UDim2.new(0.5, 0, 0, 0)
         sliderBtn.BackgroundTransparency = 1
         sliderBtn.Text = "50"
@@ -277,10 +298,10 @@ end
 
 local function createDropdown(frame, name, callback)
     local dropFrame = Instance.new("Frame")
-    dropFrame.Size = UDim2.new(1, 0, 0, 70)
+    dropFrame.Size = UDim2.new(1, 0, 0, 80)
     dropFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
     dropFrame.Parent = frame
-    Instance.new("UICorner", dropFrame).CornerRadius = UDim.new(0, 20)
+    Instance.new("UICorner", dropFrame).CornerRadius = UDim.new(0, 25)
 
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Text = name
@@ -289,31 +310,31 @@ local function createDropdown(frame, name, callback)
     nameLabel.TextSize = 22
     nameLabel.BackgroundTransparency = 1
     nameLabel.Size = UDim2.new(0.7, 0, 1, 0)
-    nameLabel.Position = UDim2.new(0, 25, 0, 0)
+    nameLabel.Position = UDim2.new(0, 30, 0, 0)
     nameLabel.Parent = dropFrame
 
     local dropBtn = Instance.new("TextButton")
-    dropBtn.Size = UDim2.new(0, 120, 0, 55)
-    dropBtn.Position = UDim2.new(1, -140, 0.5, -27.5)
+    dropBtn.Size = UDim2.new(0, 130, 0, 60)
+    dropBtn.Position = UDim2.new(1, -150, 0.5, -30)
     dropBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
     dropBtn.Text = "Select Player"
     dropBtn.TextScaled = true
     dropBtn.Font = Enum.Font.Gotham
     dropBtn.Parent = dropFrame
-    Instance.new("UICorner", dropBtn).CornerRadius = UDim.new(0, 22)
+    Instance.new("UICorner", dropBtn).CornerRadius = UDim.new(0, 25)
 
     local dropdownList = Instance.new("ScrollingFrame")
-    dropdownList.Size = UDim2.new(1, -30, 0, 200)
-    dropdownList.Position = UDim2.new(0, 15, 1, 10)
+    dropdownList.Size = UDim2.new(1, -40, 0, 220)
+    dropdownList.Position = UDim2.new(0, 20, 1, 15)
     dropdownList.BackgroundColor3 = Color3.fromRGB(25, 25, 55)
-    dropdownList.BackgroundTransparency = 0.3
-    dropdownList.ScrollBarThickness = 4
+    dropdownList.BackgroundTransparency = 0.2
+    dropdownList.ScrollBarThickness = 5
     dropdownList.Visible = false
     dropdownList.Parent = dropFrame
-    Instance.new("UICorner", dropdownList).CornerRadius = UDim.new(0, 16)
+    Instance.new("UICorner", dropdownList).CornerRadius = UDim.new(0, 18)
 
     local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 8)
+    listLayout.Padding = UDim.new(0, 10)
     listLayout.Parent = dropdownList
 
     local refreshConn
@@ -325,11 +346,11 @@ local function createDropdown(frame, name, callback)
             end
             refreshConn = RunService.Heartbeat:Connect(function()
                 if not dropdownList.Visible then refreshConn:Disconnect() return end
-                dropdownList.CanvasSize = UDim2.new(0, 0, 0, #Players:GetPlayers() * 40)
+                dropdownList.CanvasSize = UDim2.new(0, 0, 0, #Players:GetPlayers() * 45)
                 for _, p in pairs(Players:GetPlayers()) do
                     if p ~= player then
                         local pBtn = Instance.new("TextButton")
-                        pBtn.Size = UDim2.new(1, 0, 0, 40)
+                        pBtn.Size = UDim2.new(1, 0, 0, 45)
                         pBtn.BackgroundTransparency = 1
                         pBtn.Text = p.DisplayName .. " (" .. p.Name .. ")"
                         pBtn.TextScaled = true
@@ -408,12 +429,12 @@ createToggle(scrollFrames[1], "No Fall Damage", function(on)
     getgenv().noFall = on
 end)
 
--- STRAFE (Advanced - Draggable center + speed + type dropdown)
+-- STRAFE (Advanced)
 local strafeFrame = Instance.new("Frame")
 strafeFrame.Size = UDim2.new(1, 0, 0, 90)
 strafeFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
 strafeFrame.Parent = scrollFrames[1]
-Instance.new("UICorner", strafeFrame).CornerRadius = UDim.new(0, 20)
+Instance.new("UICorner", strafeFrame).CornerRadius = UDim.new(0, 25)
 
 local strafeLabel = Instance.new("TextLabel")
 strafeLabel.Text = "Advanced Strafe (Draggable)"
@@ -422,35 +443,35 @@ strafeLabel.Font = Enum.Font.GothamBold
 strafeLabel.TextSize = 22
 strafeLabel.BackgroundTransparency = 1
 strafeLabel.Size = UDim2.new(0.4, 0, 0.5, 0)
-strafeLabel.Position = UDim2.new(0, 25, 0, 0)
+strafeLabel.Position = UDim2.new(0, 30, 0, 0)
 strafeLabel.Parent = strafeFrame
 
 local strafeToggle = Instance.new("TextButton")
-strafeToggle.Size = UDim2.new(0, 90, 0, 55)
-strafeToggle.Position = UDim2.new(1, -110, 0.5, -27.5)
+strafeToggle.Size = UDim2.new(0, 100, 0, 60)
+strafeToggle.Position = UDim2.new(1, -120, 0.5, -30)
 strafeToggle.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
 strafeToggle.Text = "OFF"
 strafeToggle.TextScaled = true
 strafeToggle.Parent = strafeFrame
-Instance.new("UICorner", strafeToggle).CornerRadius = UDim.new(0, 22)
+Instance.new("UICorner", strafeToggle).CornerRadius = UDim.new(0, 25)
 
 local strafeSpeedSlider = Instance.new("TextBox")
-strafeSpeedSlider.Size = UDim2.new(0, 80, 0, 55)
-strafeSpeedSlider.Position = UDim2.new(0.45, 0, 0.5, -27.5)
+strafeSpeedSlider.Size = UDim2.new(0, 90, 0, 60)
+strafeSpeedSlider.Position = UDim2.new(0.45, 0, 0.5, -30)
 strafeSpeedSlider.BackgroundColor3 = Color3.fromRGB(45, 45, 95)
 strafeSpeedSlider.Text = "2.5"
 strafeSpeedSlider.TextScaled = true
 strafeSpeedSlider.Parent = strafeFrame
-Instance.new("UICorner", strafeSpeedSlider).CornerRadius = UDim.new(0, 22)
+Instance.new("UICorner", strafeSpeedSlider).CornerRadius = UDim.new(0, 25)
 
 local strafeType = Instance.new("TextButton")
-strafeType.Size = UDim2.new(0, 100, 0, 55)
-strafeType.Position = UDim2.new(0.55, 0, 0.5, -27.5)
+strafeType.Size = UDim2.new(0, 110, 0, 60)
+strafeType.Position = UDim2.new(0.55, 0, 0.5, -30)
 strafeType.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
 strafeType.Text = "Circle"
 strafeType.TextScaled = true
 strafeType.Parent = strafeFrame
-Instance.new("UICorner", strafeType).CornerRadius = UDim.new(0, 22)
+Instance.new("UICorner", strafeType).CornerRadius = UDim.new(0, 25)
 
 local strafeTypes = {"Circle", "Side", "Figure8"}
 local strafeTypeIndex = 1
@@ -571,17 +592,19 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- INSERT TOGGLE
+-- INSERT TOGGLE + ADVANCED ANIM (scale + rotate + glow pulse)
 local visible = false
 UserInputService.InputBegan:Connect(function(input, gp)
     if input.KeyCode == Enum.KeyCode.Insert and not gp then
         visible = not visible
         orbs.Enabled = visible
-        TweenService:Create(main, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Position = visible and UDim2.new(0.5, -240, 0.5, -310) or UDim2.new(0.5, 0, 1.5, 0),
-            Size = visible and UDim2.new(0, 480, 0, 620) or UDim2.new(0, 0, 0, 0)
+        TweenService:Create(main, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Position = visible and UDim2.new(0.5, -260, 0.5, -320) or UDim2.new(0.5, 0, 1.5, 0),
+            Size = visible and UDim2.new(0, 520, 0, 640) or UDim2.new(0, 0, 0, 0),
+            Rotation = visible and 0 or 10  -- subtle rotate anim
         }):Play()
-        TweenService:Create(glow, TweenInfo.new(0.7), {ImageTransparency = visible and 0.4 or 1}):Play()
+        TweenService:Create(glow, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {ImageTransparency = visible and 0.35 or 1}):Play()
+        TweenService:Create(stroke, TweenInfo.new(0.8, Enum.EasingStyle.Pulse), {Transparency = visible and 0.15 or 0.8}):Play()
         main.Visible = true
     end
 end)
@@ -596,9 +619,9 @@ local minimized = false
 mini.MouseButton1Click:Connect(function()
     minimized = not minimized
     mini.Text = minimized and "+" or "−"
-    TweenService:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {
-        Size = minimized and UDim2.new(0, 480, 0, 70) or UDim2.new(0, 480, 0, 620)
+    TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart), {
+        Size = minimized and UDim2.new(0, 520, 0, 80) or UDim2.new(0, 520, 0, 640)
     }):Play()
 end)
 
-print("ULTIMATE UNIVERSAL HUB v3.1 LOADED - Press INSERT to open (PC Only)!")
+print("ULTIMATE UNIVERSAL HUB v3.2 LOADED - Press INSERT to open!")
