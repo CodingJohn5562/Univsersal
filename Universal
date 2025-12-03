@@ -1,6 +1,5 @@
--- ULTIMATE UNIVERSAL HUB v4.0 - Super Light & 100% WORKING
--- Only 8 essential features + Insert GUARANTEED to open/close
--- Clean, wide, no overlap, instant open
+-- ULTIMATE UNIVERSAL HUB v5.0 - PC ONLY - PRESS "T" TO OPEN/CLOSE
+-- 100% WORKS - Clean, centered, no mobile support, super stable
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -8,101 +7,111 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
--- Create GUI
+-- GUI Setup
 local screen = Instance.new("ScreenGui")
-screen.Name = "UltimateHubV4"
+screen.Name = "UltimateHubV5"
 screen.ResetOnSpawn = false
 screen.Parent = game.CoreGui
 
 local main = Instance.new("Frame")
-main.Size = UDim2.new(0, 500, 0, 550)
-main.Position = UDim2.new(0.5, -250, 0.5, -275)
-main.BackgroundColor3 = Color3.fromRGB(15, 15, 35)
+main.Size = UDim2.new(0, 520, 0, 580)
+main.Position = UDim2.new(0.5, -260, 0.5, -290)
+main.BackgroundColor3 = Color3.fromRGB(12, 12, 35)
 main.BorderSizePixel = 0
 main.Visible = false
 main.Active = true
 main.Draggable = true
 main.Parent = screen
 
-Instance.new("UICorner", main).CornerRadius = UDim.new(0, 25)
+-- Styling
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 28)
 local stroke = Instance.new("UIStroke", main)
 stroke.Thickness = 4
 stroke.Color = Color3.fromRGB(0, 255, 255)
-stroke.Transparency = 0.2
+stroke.Transparency = 0.15
+
+local glow = Instance.new("ImageLabel", main)
+glow.Size = UDim2.new(1.4, 0, 1.4, 0)
+glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+glow.AnchorPoint = Vector2.new(0.5, 0.5)
+glow.BackgroundTransparency = 1
+glow.Image = "rbxassetid://4316371720"
+glow.ImageColor3 = Color3.fromRGB(0, 255, 200)
+glow.ImageTransparency = 0.4
 
 -- Title
 local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1, 0, 0, 70)
+title.Size = UDim2.new(1, 0, 0, 80)
 title.BackgroundTransparency = 1
-title.Text = "ULTIMATE HUB v4.0"
+title.Text = "ULTIMATE HUB v5.0"
 title.TextColor3 = Color3.fromRGB(0, 255, 255)
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 36
+title.TextSize = 38
 title.TextStrokeTransparency = 0.7
 
--- Scrolling frame
+-- Scrolling Area
 local scroll = Instance.new("ScrollingFrame", main)
-scroll.Size = UDim2.new(1, -40, 1, -100)
-scroll.Position = UDim2.new(0, 20, 0, 80)
+scroll.Size = UDim2.new(1, -50, 1, -110)
+scroll.Position = UDim2.new(0, 25, 0, 90)
 scroll.BackgroundTransparency = 1
 scroll.ScrollBarThickness = 8
 scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
-scroll.CanvasSize = UDim2.new(0, 0, 0, 800)
+scroll.CanvasSize = UDim2.new(0, 0, 0, 900)
 
 local layout = Instance.new("UIListLayout", scroll)
-layout.Padding = UDim.new(0, 25)
+layout.Padding = UDim.new(0, 28)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Toggle Template
+-- Toggle Function
 local function createToggle(name, callback)
     local frame = Instance.new("Frame", scroll)
-    frame.Size = UDim2.new(1, 0, 0, 70)
-    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 70)
-    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 20)
+    frame.Size = UDim2.new(1, 0, 0, 78)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 75)
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 22)
 
     local label = Instance.new("TextLabel", frame)
-    label.Size = UDim2.new(0.6, 0, 1, 0)
-    label.Position = UDim2.new(0, 20, 0, 0)
+    label.Size = UDim2.new(0.65, 0, 1, 0)
+    label.Position = UDim2.new(0, 25, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = name
     label.TextColor3 = Color3.fromRGB(200, 255, 255)
     label.Font = Enum.Font.GothamBold
-    label.TextSize = 24
+    label.TextSize = 26
     label.TextXAlignment = Enum.TextXAlignment.Left
 
     local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0, 110, 0, 55)
-    btn.Position = UDim2.new(1, -130, 0.5, -27.5)
-    btn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    btn.Size = UDim2.new(0, 110, 0, 58)
+    btn.Position = UDim2.new(1, -135, 0.5, -29)
+    btn.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
     btn.Text = "OFF"
     btn.TextColor3 = Color3.new(1,1,1)
     btn.Font = Enum.Font.GothamBold
     btn.TextScaled = true
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 20)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 22)
 
-    local on = false
+    local active = false
     btn.MouseButton1Click:Connect(function()
-        on = not on
-        btn.Text = on and "ON" or "OFF"
-        btn.BackgroundColor3 = on and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 60, 60)
-        callback(on)
+        active = not active
+        btn.Text = active and "ON" or "OFF"
+        btn.BackgroundColor3 = active and Color3.fromRGB(0, 255, 120) or Color3.fromRGB(255, 70, 70)
+        callback(active)
     end)
 end
 
--- FEATURES (only the best & most stable)
+-- FEATURES (only the best & most used)
 createToggle("Fly (WASD + Space/Shift)", function(on)
     getgenv().fly = on
     if on and player.Character then
-        local bv = Instance.new("BodyVelocity", player.Character.HumanoidRootPart)
+        local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+        if not hrp then return end
+        local bv = Instance.new("BodyVelocity", hrp)
         bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-        bv.Velocity = Vector3.new(0,0,0)
-        local bg = Instance.new("BodyGyro", player.Character.HumanoidRootPart)
+        local bg = Instance.new("BodyGyro", hrp)
         bg.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
         bg.P = 10000
         spawn(function()
             while getgenv().fly and player.Character do
                 local cam = workspace.CurrentCamera
-                local hrp = player.Character.HumanoidRootPart
                 local move = Vector3.new()
                 if UserInputService:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
                 if UserInputService:IsKeyDown(Enum.KeyCode.S) then move -= cam.CFrame.LookVector end
@@ -110,7 +119,7 @@ createToggle("Fly (WASD + Space/Shift)", function(on)
                 if UserInputService:IsKeyDown(Enum.KeyCode.D) then move += cam.CFrame.RightVector end
                 if UserInputService:IsKeyDown(Enum.KeyCode.Space) then move += Vector3.new(0,1,0) end
                 if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then move -= Vector3.new(0,1,0) end
-                bv.Velocity = move * 80
+                bv.Velocity = move.Unit * 100
                 bg.CFrame = cam.CFrame
                 task.wait()
             end
@@ -120,9 +129,9 @@ createToggle("Fly (WASD + Space/Shift)", function(on)
     end
 end)
 
-createToggle("Speed Hack (100)", function(on)
+createToggle("Speed Hack (120)", function(on)
     if player.Character and player.Character:FindFirstChild("Humanoid") then
-        player.Character.Humanoid.WalkSpeed = on and 100 or 16
+        player.Character.Humanoid.WalkSpeed = on and 120 or 16
     end
 end)
 
@@ -137,12 +146,8 @@ end)
 createToggle("Fullbright", function(on)
     if on then
         game.Lighting.Brightness = 3
-        game.Lighting.FogEnd = 99999
+        game.Lighting.FogEnd = 100000
         game.Lighting.GlobalShadows = false
-    else
-        game.Lighting.Brightness = 1
-        game.Lighting.FogEnd = 1000
-        game.Lighting.GlobalShadows = true
     end
 end)
 
@@ -152,34 +157,39 @@ createToggle("Player ESP", function(on)
     end
 end)
 
--- Noclip & Infinite Jump loop
+-- Noclip & Infinite Jump Loop
 RunService.Stepped:Connect(function()
     if getgenv().noclip and player.Character then
-        for _, v in pairs(player.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.CanCollide = false
+        for _, part in pairs(player.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
             end
         end
     end
-    if getgenv().infjump and UserInputService:IsKeyDown(Enum.KeyCode.Space) and player.Character then
-        player.Character.Humanoid:ChangeState("Jumping")
+    if getgenv().infjump and UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid:ChangeState("Jumping")
+        end
     end
 end)
 
--- INSERT TOGGLE - 100% WORKING
-local open = false
-UserInputService.InputBegan:Connect(function(key)
-    if key.KeyCode == Enum.KeyCode.Insert then
-        open = not open
-        main.Visible = open
-        
-        if open then
-            TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
-                Size = UDim2.new(0, 500, 0, 550),
-                Position = UDim2.new(0.5, -250, 0.5, -275)
+-- T TO OPEN/CLOSE - 100% WORKING ON PC
+local isOpen = false
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.T then
+        isOpen = not isOpen
+        main.Visible = true  -- Always set visible first
+
+        if isOpen then
+            main.Size = UDim2.new(0, 0, 0, 0)
+            main.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TweenService:Create(main, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 520, 0, 580),
+                Position = UDim2.new(0.5, -260, 0.5, -290)
             }):Play()
         else
-            TweenService:Create(main, TweenInfo.new(0.4), {
+            TweenService:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {
                 Size = UDim2.new(0, 0, 0, 0),
                 Position = UDim2.new(0.5, 0, 0.5, 0)
             }):Play()
@@ -187,4 +197,4 @@ UserInputService.InputBegan:Connect(function(key)
     end
 end)
 
-print("ULTIMATE HUB v4.0 Loaded - Press INSERT to open!")
+print("ULTIMATE HUB v5.0 LOADED - PRESS T TO OPEN (PC ONLY)")
