@@ -1,5 +1,5 @@
--- ULTIMATE UNIVERSAL HUB v3.2 - Press INSERT to toggle (PC Only)
--- Wider UI + Fixed spacing/separation + Advanced redesign & animations
+-- ULTIMATE UNIVERSAL HUB v3.3 - Press INSERT to toggle (PC Only)
+-- Fixed open/close (Visible set after anim) + No feature overlap + Advanced redesign & animations
 -- Sleek modern look with gradients, shadows, hover effects + Epic open/close anim (scale + rotate + glow pulse)
 
 local TweenService = game:GetService("TweenService")
@@ -22,7 +22,7 @@ loadBg.BackgroundTransparency = 0.1
 loadBg.Parent = loadScreen
 
 local loadText = Instance.new("TextLabel")
-loadText.Text = "Loading Ultimate Hub v3.2..."
+loadText.Text = "Loading Ultimate Hub v3.3..."
 loadText.Font = Enum.Font.GothamBlack
 loadText.TextSize = 48
 loadText.TextColor3 = Color3.fromRGB(0, 255, 255)
@@ -48,15 +48,15 @@ task.wait(2.2)
 particle.Enabled = false
 loadScreen:Destroy()
 
--- MAIN GUI (Wider: 520x640)
+-- MAIN GUI (Wider: 560x680 for better spacing)
 local screen = Instance.new("ScreenGui")
-screen.Name = "UltimateUniversalHubV32"
+screen.Name = "UltimateUniversalHubV33"
 screen.ResetOnSpawn = false
 screen.Parent = game.CoreGui
 
 local main = Instance.new("Frame")
-main.Size = UDim2.new(0, 520, 0, 640)
-main.Position = UDim2.new(0.5, -260, 0.5, -320)
+main.Size = UDim2.new(0, 560, 0, 680)
+main.Position = UDim2.new(0.5, -280, 0.5, -340)
 main.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
 main.BorderSizePixel = 0
 main.Visible = false
@@ -118,7 +118,7 @@ header.Parent = main
 Instance.new("UICorner", header).CornerRadius = UDim.new(0, 40)
 
 local title = Instance.new("TextLabel")
-title.Text = "ULTIMATE UNIVERSAL HUB v3.2"
+title.Text = "ULTIMATE UNIVERSAL HUB v3.3"
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 32
 title.TextColor3 = Color3.fromRGB(0, 255, 255)
@@ -186,13 +186,13 @@ for i = 1, #tabs do
     scroll.BackgroundTransparency = 1
     scroll.ScrollBarThickness = 6
     scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
-    scroll.CanvasSize = UDim2.new(0, 0, 0, 1400)
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 1600)  -- Increased for more space
     scroll.Visible = i == 1
     scroll.Parent = main
     scrollFrames[i] = scroll
 
     local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 25)  -- Increased spacing
+    listLayout.Padding = UDim.new(0, 30)  -- Even more spacing
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
     listLayout.Parent = scroll
 end
@@ -206,7 +206,7 @@ end
 -- ADVANCED TOGGLE/SLIDER/DROPDOWN TEMPLATE (hover effects + increased height)
 local function createToggle(frame, name, callback, hasSlider)
     local toggleFrame = Instance.new("Frame")
-    toggleFrame.Size = UDim2.new(1, 0, 0, 80)  -- Increased height
+    toggleFrame.Size = UDim2.new(1, 0, 0, 90)  -- Increased height for separation
     toggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
     toggleFrame.Parent = frame
     Instance.new("UICorner", toggleFrame).CornerRadius = UDim.new(0, 25)
@@ -429,7 +429,7 @@ createToggle(scrollFrames[1], "No Fall Damage", function(on)
     getgenv().noFall = on
 end)
 
--- STRAFE (Advanced)
+-- STRAFE (Advanced - Wider spacing)
 local strafeFrame = Instance.new("Frame")
 strafeFrame.Size = UDim2.new(1, 0, 0, 90)
 strafeFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 75)
@@ -457,7 +457,7 @@ Instance.new("UICorner", strafeToggle).CornerRadius = UDim.new(0, 25)
 
 local strafeSpeedSlider = Instance.new("TextBox")
 strafeSpeedSlider.Size = UDim2.new(0, 90, 0, 60)
-strafeSpeedSlider.Position = UDim2.new(0.45, 0, 0.5, -30)
+strafeSpeedSlider.Position = UDim2.new(0.4, 0, 0.5, -30)
 strafeSpeedSlider.BackgroundColor3 = Color3.fromRGB(45, 45, 95)
 strafeSpeedSlider.Text = "2.5"
 strafeSpeedSlider.TextScaled = true
@@ -466,7 +466,7 @@ Instance.new("UICorner", strafeSpeedSlider).CornerRadius = UDim.new(0, 25)
 
 local strafeType = Instance.new("TextButton")
 strafeType.Size = UDim2.new(0, 110, 0, 60)
-strafeType.Position = UDim2.new(0.55, 0, 0.5, -30)
+strafeType.Position = UDim2.new(0.6, 0, 0.5, -30)
 strafeType.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
 strafeType.Text = "Circle"
 strafeType.TextScaled = true
@@ -598,14 +598,18 @@ UserInputService.InputBegan:Connect(function(input, gp)
     if input.KeyCode == Enum.KeyCode.Insert and not gp then
         visible = not visible
         orbs.Enabled = visible
-        TweenService:Create(main, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Position = visible and UDim2.new(0.5, -260, 0.5, -320) or UDim2.new(0.5, 0, 1.5, 0),
-            Size = visible and UDim2.new(0, 520, 0, 640) or UDim2.new(0, 0, 0, 0),
+        local tween = TweenService:Create(main, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Position = visible and UDim2.new(0.5, -280, 0.5, -340) or UDim2.new(0.5, 0, 1.5, 0),
+            Size = visible and UDim2.new(0, 560, 0, 680) or UDim2.new(0, 0, 0, 0),
             Rotation = visible and 0 or 10  -- subtle rotate anim
-        }):Play()
-        TweenService:Create(glow, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {ImageTransparency = visible and 0.35 or 1}):Play()
+        })
+        tween:Play()
+        TweenService:Create(glow, TweenInfo.new(0.8), {ImageTransparency = visible and 0.35 or 1}):Play()
         TweenService:Create(stroke, TweenInfo.new(0.8, Enum.EasingStyle.Pulse), {Transparency = visible and 0.15 or 0.8}):Play()
         main.Visible = true
+        tween.Completed:Connect(function()
+            main.Visible = visible
+        end)
     end
 end)
 
@@ -620,8 +624,8 @@ mini.MouseButton1Click:Connect(function()
     minimized = not minimized
     mini.Text = minimized and "+" or "−"
     TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart), {
-        Size = minimized and UDim2.new(0, 520, 0, 80) or UDim2.new(0, 520, 0, 640)
+        Size = minimized and UDim2.new(0, 560, 0, 80) or UDim2.new(0, 560, 0, 680)
     }):Play()
 end)
 
-print("ULTIMATE UNIVERSAL HUB v3.2 LOADED - Press INSERT to open!")
+print("ULTIMATE UNIVERSAL HUB v3.3 LOADED - Press INSERT to open!")
